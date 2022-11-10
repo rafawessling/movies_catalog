@@ -2,7 +2,10 @@ import logging
 from fastapi.exceptions import HTTPException
 from app.src.schemas.movie import MovieSchema
 from app.src.server.database import db
-from app.src.services.movie import get_movie_by_name
+from app.src.services.movie import (
+    get_movie_by_name,
+    get_all_movies
+)
 
 
 logger = logging.getLogger(__name__)
@@ -52,4 +55,24 @@ async def find_movie_by_name(name):
         return {'status': 'No movies found'}
     except Exception as e:
         logger.exception(f'find_movie_by_name.error: {e}')
+        raise HTTPException(status_code=400)
+
+
+async def find_all_movies():
+    """
+    Get all movies registered
+
+    Returns:
+        type: list(dict("movie": movie))
+        obs: The movie is only returned if it is found the search key in the name
+    Raises:
+        HTTPException: status_code=400
+    """
+    try:
+        movies = await get_all_movies()
+        if movies is not None:
+            return movies
+        return {'status': 'No movies found'}
+    except Exception as e:
+        logger.exception(f'find_all_movies.error: {e}')
         raise HTTPException(status_code=400)
