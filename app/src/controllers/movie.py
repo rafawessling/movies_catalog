@@ -4,6 +4,7 @@ from app.src.schemas.movie import MovieSchema
 from app.src.server.database import db
 from app.src.services.movie import (
     get_movie_by_name,
+    get_movie_by_genre,
     get_all_movies,
     delete_movie_id
 )
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 async def register_movie(movie: MovieSchema):
     """
-    Method responsible for register a movie
+    Method responsible for registering a movie
 
     Args:
         movie (MovieSchema)
@@ -39,7 +40,7 @@ async def register_movie(movie: MovieSchema):
 
 async def find_movie_by_name(name):
     """
-    Get a movie with `name` as search key
+    Method responsible for getting a movie with `name` as a search key
 
     Args:
         name: str
@@ -58,10 +59,30 @@ async def find_movie_by_name(name):
         logger.exception(f'find_movie_by_name.error: {e}')
         raise HTTPException(status_code=400)
 
+async def find_movie_by_genre(genre):
+    """
+    Method responsible for getting a movie with `genre` as a search key
+
+    Args:
+        genre: str
+    Returns:
+        type: list(dict("movie": movie))
+        obs: The movie is only returned if it is found the search key in the genre
+    Raises:
+        HTTPException: status_code=400
+    """
+    try:
+        movies = await get_movie_by_genre(genre)
+        if movies is not None:
+            return movies
+        return {'status': 'No movies found'}
+    except Exception as e:
+        logger.exception(f'find_movie_by_genre.error: {e}')
+        raise HTTPException(status_code=400)
 
 async def find_all_movies():
     """
-    Get all movies registered
+    Method responsible for getting all movies registered
 
     Returns:
         type: list(dict("movie": movie))
@@ -80,13 +101,12 @@ async def find_all_movies():
 
 async def delete_movie_by_id(id):
     """
-    Remove a movie by `id`
+    Method responsible for removing a movie by `id`
 
     Args:
-        _id: str
+        id: str
     Returns:
-        type: list(dict("movie": movie))
-        obs: The movie is only returned if it is found the search key in the name
+        type: ("status": status)
     Raises:
         HTTPException: status_code=400
     """

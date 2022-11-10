@@ -14,6 +14,18 @@ async def get_movie_by_name(name):
         return json.loads(json_util.dumps(movies))
     return None
 
+async def get_movie_by_genre(genre):
+    query = {
+            "genre": {
+                "$regex": genre,
+                "$options": "i"
+            }
+        }
+    movies_genre = list(db.movie_collection.find(query))
+    if movies_genre:
+        return json.loads(json_util.dumps(movies_genre))
+    return None
+
 async def get_all_movies():
     movies = db.movie_collection.find()
     if movies:

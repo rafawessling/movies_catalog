@@ -5,6 +5,7 @@ from app.src.schemas.movie import MovieSchema
 from app.src.controllers.movie import (
     register_movie,
     find_movie_by_name,
+    find_movie_by_genre,
     find_all_movies,
     delete_movie_by_id
 )
@@ -16,9 +17,14 @@ async def post_movie(movie: MovieSchema):
     add_movie = await register_movie(movie)
     return JSONResponse(status_code=200, content=add_movie)
 
-@router.get('/search', summary='Search movie by name')
+@router.get('/search/{name}', summary='Search movie by name')
 async def get_movie(name: str):
     movies = await find_movie_by_name(name)
+    return JSONResponse(status_code=200, content=movies)
+
+@router.get('/search/genre/{genre}', summary='Search movie by genre')
+async def get_movie_genre(genre: str):
+    movies = await find_movie_by_genre(genre)
     return JSONResponse(status_code=200, content=movies)
 
 @router.get('/all_movies', summary='Get all movies')
