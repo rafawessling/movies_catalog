@@ -32,3 +32,24 @@ async def register_movie(movie: MovieSchema):
     except Exception as e:
         logger.exception(f'register_movie.error: {e}')
         raise HTTPException(status_code=422)
+
+async def find_movie_by_name(name):
+    """
+    Get a movie with `name` as search key
+
+    Args:
+        name: str
+    Returns:
+        type: list(dict("movie": movie))
+        obs: The movie is only returned if it is found the search key in the name
+    Raises:
+        HTTPException: status_code=400
+    """
+    try:
+        movies = await get_movie_by_name(name)
+        if movies is not None:
+            return movies
+        return {'status': 'No movies found'}
+    except Exception as e:
+        logger.exception(f'find_movie_by_name.error: {e}')
+        raise HTTPException(status_code=400)
