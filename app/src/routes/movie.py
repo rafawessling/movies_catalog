@@ -5,7 +5,8 @@ from app.src.schemas.movie import MovieSchema
 from app.src.controllers.movie import (
     register_movie,
     find_movie_by_name,
-    find_all_movies
+    find_all_movies,
+    delete_movie_by_id
 )
 
 router = APIRouter(tags=['Movies'], prefix='/movies')
@@ -23,4 +24,9 @@ async def get_movie(name: str):
 @router.get('/all_movies', summary='Get all movies')
 async def get_all_movies():
     movies = await find_all_movies()
+    return JSONResponse(status_code=200, content=movies)
+
+@router.delete('/register/{id}', summary='Delete a movie')
+async def delete_movie(id):
+    movies = await delete_movie_by_id(id)
     return JSONResponse(status_code=200, content=movies)

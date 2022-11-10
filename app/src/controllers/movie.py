@@ -4,7 +4,8 @@ from app.src.schemas.movie import MovieSchema
 from app.src.server.database import db
 from app.src.services.movie import (
     get_movie_by_name,
-    get_all_movies
+    get_all_movies,
+    delete_movie_id
 )
 
 
@@ -75,4 +76,25 @@ async def find_all_movies():
         return {'status': 'No movies found'}
     except Exception as e:
         logger.exception(f'find_all_movies.error: {e}')
+        raise HTTPException(status_code=400)
+
+async def delete_movie_by_id(id):
+    """
+    Remove a movie by `id`
+
+    Args:
+        _id: str
+    Returns:
+        type: list(dict("movie": movie))
+        obs: The movie is only returned if it is found the search key in the name
+    Raises:
+        HTTPException: status_code=400
+    """
+    try:
+        movie = await delete_movie_id(id)
+        if movie == True:
+            return {'status': 'The movie was removed'}
+        return {'status': 'No movies found'}
+    except Exception as e:
+        logger.exception(f'delete_movie_by_id.error: {e}')
         raise HTTPException(status_code=400)

@@ -19,3 +19,9 @@ async def get_all_movies():
     if movies:
         return json.loads(json_util.dumps(movies))
     return None
+
+async def delete_movie_id(id):
+    movies = db.movie_collection.delete_one({'_id': ObjectId(id)})
+    if movies.deleted_count:
+        return True
+    return False
