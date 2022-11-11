@@ -26,8 +26,14 @@ async def get_movie_by_genre(genre):
         return json.loads(json_util.dumps(movies_genre))
     return None
 
+async def get_movie_by_metascore(metascore):
+    movies_metascore = list(db.movie_collection.find({"metascore": {"$gte": metascore}}))
+    if movies_metascore:
+        return json.loads(json_util.dumps(movies_metascore))
+    return None
+
 async def get_all_movies():
-    movies = db.movie_collection.find()
+    movies = db.movie_collection.find().sort("name")
     if movies:
         return json.loads(json_util.dumps(movies))
     return None

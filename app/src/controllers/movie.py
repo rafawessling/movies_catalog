@@ -5,6 +5,7 @@ from app.src.server.database import db
 from app.src.services.movie import (
     get_movie_by_name,
     get_movie_by_genre,
+    get_movie_by_metascore,
     get_all_movies,
     delete_movie_id
 )
@@ -78,6 +79,27 @@ async def find_movie_by_genre(genre):
         return {'status': 'No movies found'}
     except Exception as e:
         logger.exception(f'find_movie_by_genre.error: {e}')
+        raise HTTPException(status_code=400)
+
+async def find_movie_by_metascore(metascore):
+    """
+    Method responsible for getting a movie with `metascore` as a search key
+
+    Args:
+        metascore: int
+    Returns:
+        type: list(dict("movie": movie))
+        obs: The movie is only returned if the metascore is greater than or equal to the search key
+    Raises:
+        HTTPException: status_code=400
+    """
+    try:
+        movies = await get_movie_by_metascore(metascore)
+        if movies is not None:
+            return movies
+        return {'status': 'No movies found'}
+    except Exception as e:
+        logger.exception(f'find_movie_by_metascore.error: {e}')
         raise HTTPException(status_code=400)
 
 async def find_all_movies():
