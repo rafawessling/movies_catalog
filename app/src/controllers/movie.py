@@ -3,7 +3,7 @@ from fastapi.exceptions import HTTPException
 from app.src.schemas.movie import MovieSchema
 from app.src.server.database import db
 from app.src.services.movie import (
-    get_movie_by_name,
+    get_movie_by_title,
     get_movie_by_genre,
     get_movie_by_metascore,
     get_all_movies,
@@ -25,7 +25,7 @@ async def register_movie(movie: MovieSchema):
         HTTPException: status_code = 422
     """
     try:
-        existing_movie = await get_movie_by_name(movie.name)
+        existing_movie = await get_movie_by_title(movie.title)
         if existing_movie is None:
             add_movie = db.movie_collection.insert_one(movie.dict())
             
@@ -39,25 +39,25 @@ async def register_movie(movie: MovieSchema):
         logger.exception(f'register_movie.error: {e}')
         raise HTTPException(status_code=422)
 
-async def find_movie_by_name(name):
+async def find_movie_by_title(title):
     """
-    Method responsible for getting a movie with `name` as a search key
+    Method responsible for getting a movie with `title` as a search key
 
     Args:
         name: str
     Returns:
         type: list(dict("movie": movie))
-        obs: The movie is only returned if it is found the search key in the name
+        obs: The movie is only returned if it is found the search key in the title
     Raises:
         HTTPException: status_code=400
     """
     try:
-        movies = await get_movie_by_name(name)
+        movies = await get_movie_by_title(title)
         if movies is not None:
             return movies
         return {'status': 'No movies found'}
     except Exception as e:
-        logger.exception(f'find_movie_by_name.error: {e}')
+        logger.exception(f'find_movie_by_title.error: {e}')
         raise HTTPException(status_code=400)
 
 async def find_movie_by_genre(genre):

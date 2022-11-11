@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 
 class MovieSchema(BaseModel):
-    name: str = Field(...,unique = True, min_length=1, max_length=80, description="Name",)
+    title: str = Field(...,unique = True, min_length=1, max_length=80, description="Name",)
     release_date: str = Field(..., description="Release date")
     runtime: int = Field(..., ge=1, description="Runtime in minutes")
     genre: str = Field(..., min_length=3, max_length=50, description="Genre")
@@ -21,7 +21,7 @@ class MovieSchema(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "name": "Interstellar",
+                "title": "Interstellar",
                 "release_date": "2014-11-07",
                 "runtime": 169,
                 "genre": "Adventure, Drama, Sci-Fi",

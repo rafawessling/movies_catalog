@@ -2,10 +2,10 @@ from bson import json_util, ObjectId
 import json
 from app.src.server.database import db
 
-async def get_movie_by_name(name):
+async def get_movie_by_title(title):
     query = {
-            "name": {
-                "$regex": name,
+            "title": {
+                "$regex": title,
                 "$options": "i"
             }
         }

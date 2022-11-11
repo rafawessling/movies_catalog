@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from app.src.schemas.movie import MovieSchema
 from app.src.controllers.movie import (
     register_movie,
-    find_movie_by_name,
+    find_movie_by_title,
     find_movie_by_genre,
     find_movie_by_metascore,
     find_all_movies,
@@ -18,9 +18,9 @@ async def post_movie(movie: MovieSchema):
     add_movie = await register_movie(movie)
     return JSONResponse(status_code=200, content=add_movie)
 
-@router.get('/search/{name}', summary='Search movie by name')
-async def get_movie(name: str):
-    movies = await find_movie_by_name(name)
+@router.get('/search/{title}', summary='Search movie by name')
+async def get_movie(title: str):
+    movies = await find_movie_by_title(title)
     return JSONResponse(status_code=200, content=movies)
 
 @router.get('/search/genre/{genre}', summary='Search movie by genre')
