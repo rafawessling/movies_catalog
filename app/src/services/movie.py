@@ -33,7 +33,7 @@ async def get_movie_by_metascore(metascore):
     return None
 
 async def get_all_movies():
-    movies = db.movie_collection.find().sort("name")
+    movies = db.movie_collection.find().sort("title")
     if movies:
         return json.loads(json_util.dumps(movies))
     return None
