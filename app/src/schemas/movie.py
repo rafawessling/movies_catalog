@@ -16,6 +16,7 @@ class MovieSchema(BaseModel):
     country: str = Field(..., min_length=3, max_length=200, description="Country")
     poster: Optional[str] = Field(None, min_length=3, description="Poster")
     metascore: int = Field(..., ge=1, le=100, description="Metascore")
+    type_of_media: str = Field(..., min_length=3, max_length=10, description="Type")
     production: Optional[str] = Field(None, min_length=3, max_length=250, description="Production companies")
 
     class Config:
@@ -32,6 +33,7 @@ class MovieSchema(BaseModel):
                 "country": "United States, United Kingdom, Canada",
                 "poster": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg",
                 "metascore": 74,
+                "type_of_media": "Movie",
                 "production": "Paramount Pictures, Warner Bros. Pictures, Legendary Pictures, Syncopy, Lynda Obst Productions"
             }
         }
