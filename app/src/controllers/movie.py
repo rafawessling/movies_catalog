@@ -5,6 +5,7 @@ from app.src.server.database import db
 from app.src.services.movie import (
     get_movie_by_title,
     get_movie_by_genre,
+    get_media_by_genre,
     get_movie_by_metascore,
     get_all_movies,
     delete_movie_id
@@ -79,6 +80,28 @@ async def find_movie_by_genre(genre):
         return {'status': 'No movies found'}
     except Exception as e:
         logger.exception(f'find_movie_by_genre.error: {e}')
+        raise HTTPException(status_code=400)
+
+async def find_media_by_genre(type_of_media, genre):
+    """
+    Method responsible for getting a media with `type` and `genre` as search keys
+
+    Args:
+        type_of_media: str
+        genre: str
+    Returns:
+        type: list(dict("movie": movie))
+        obs: The media is only returned if it is found the search keys
+    Raises:
+        HTTPException: status_code=400
+    """
+    try:
+        media = await get_media_by_genre(type_of_media, genre)
+        if media is not None:
+            return media
+        return {'status': 'No movies or series found'}
+    except Exception as e:
+        logger.exception(f'find_media_by_genre.error: {e}')
         raise HTTPException(status_code=400)
 
 async def find_movie_by_metascore(metascore):

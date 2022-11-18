@@ -6,6 +6,7 @@ from app.src.controllers.movie import (
     register_movie,
     find_movie_by_title,
     find_movie_by_genre,
+    find_media_by_genre,
     find_movie_by_metascore,
     find_all_movies,
     delete_movie_by_id
@@ -26,6 +27,11 @@ async def get_movie(title: str):
 @router.get('/search/genre/{genre}', summary='Search movie by genre')
 async def get_movie_genre(genre: str):
     movies = await find_movie_by_genre(genre)
+    return JSONResponse(status_code=200, content=movies)
+
+@router.get('/search/type_of_media/{type_of_media}/genre/{genre}', summary='Search movie or series by genre')
+async def get_media_by_genre(type_of_media: str, genre: str):
+    movies = await find_media_by_genre(type_of_media, genre)
     return JSONResponse(status_code=200, content=movies)
 
 @router.get('/search/metascore/{metascore}', summary='Search movie by metascore')

@@ -26,6 +26,27 @@ async def get_movie_by_genre(genre):
         return json.loads(json_util.dumps(movies_genre))
     return None
 
+async def get_media_by_genre(type_of_media, genre):
+    query = {
+            "type_of_media": {
+                "$regex": type_of_media,
+                "$options": "i"
+            }
+        }
+    media_type = list(db.movie_collection.find(query))
+    if media_type:
+        query_2 = {
+            "genre": {
+                "$regex": genre,
+                "$options": "i"
+            }
+        }
+        media_genre = list(db.movie_collection.find(query_2))
+        if media_genre:
+            return json.loads(json_util.dumps(media_genre))
+        return None
+    return None
+
 async def get_movie_by_metascore(metascore):
     movies_metascore = list(db.movie_collection.find({"metascore": {"$gte": metascore}}))
     if movies_metascore:
