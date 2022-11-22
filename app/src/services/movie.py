@@ -2,6 +2,12 @@ from bson import json_util, ObjectId
 import json
 from app.src.server.database import db
 
+async def get_all_movies():
+    movies = db.movie_collection.find().sort("title")
+    if movies:
+        return json.loads(json_util.dumps(movies))
+    return None
+
 async def get_movie_by_title(title):
     query = {
             "title": {
@@ -14,50 +20,36 @@ async def get_movie_by_title(title):
         return json.loads(json_util.dumps(movies))
     return None
 
-async def get_movie_by_genre(genre):
-    query = {
-            "genre": {
-                "$regex": genre,
-                "$options": "i"
-            }
-        }
-    movies_genre = list(db.movie_collection.find(query))
-    if movies_genre:
-        return json.loads(json_util.dumps(movies_genre))
-    return None
-
-async def get_media_by_genre(type_of_media, genre):
+async def get_movie_by_genre(type_of_movie, genre):
     query = {
             "type_of_media": {
-                "$regex": type_of_media,
+                "$regex": type_of_movie,
                 "$options": "i"
             }
         }
-    media_type = list(db.movie_collection.find(query))
-    if media_type:
+    movie_type = list(db.movie_collection.find(query))
+    if movie_type:
         query_2 = {
             "genre": {
                 "$regex": genre,
                 "$options": "i"
             }
         }
-        media_genre = list(db.movie_collection.find(query_2))
-        if media_genre:
-            return json.loads(json_util.dumps(media_genre))
+        movie_genre = list(db.movie_collection.find(query_2))
+        if movie_genre:
+            return json.loads(json_util.dumps(movie_genre))
         return None
     return None
 
-async def get_movie_by_metascore(metascore):
-    movies_metascore = list(db.movie_collection.find({"metascore": {"$gte": metascore}}))
-    if movies_metascore:
-        return json.loads(json_util.dumps(movies_metascore))
-    return None
-
-async def get_all_movies():
-    movies = db.movie_collection.find().sort("title")
-    if movies:
-        return json.loads(json_util.dumps(movies))
-    return None
+async def update_movie_id(id, movie):
+    movie = {key: value for key, value in movie if value is not None}
+    updated_movie = db.movie_collection.update_one(
+        {'_id': ObjectId(id)},
+        {'$set': movie}
+    )
+    if updated_movie.modified_count:
+        return True
+    return False
 
 async def delete_movie_id(id):
     movies = db.movie_collection.delete_one({'_id': ObjectId(id)})
